@@ -9,7 +9,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-vendor-{{ arch }}-{{ checksum "Gopkg.lock" }
+            - v1-vendor-{{ arch }}-{{ checksum "Gopkg.lock" }}
       - run: make get-deps
       - save_cache:
           key: v1-vendor-{{ arch }}-{{ checksum "Gopkg.lock" }}
