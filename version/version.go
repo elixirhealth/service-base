@@ -52,6 +52,7 @@ func init() {
 	Current = GetBuildInfo()
 }
 
+// GetBuildInfo gets the BuildInfo from build flags or local git repo info.
 func GetBuildInfo() BuildInfo {
 	wd, err := os.Getwd()
 	errors.MaybePanic(err)
