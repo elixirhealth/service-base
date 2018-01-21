@@ -2,7 +2,8 @@
 
 set -eou pipefail
 
-GIT_HOOKS_DIR="scripts/git-hooks"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+GIT_HOOKS_DIR="${DIR}/git-hooks"
 
 for filepath in ${GIT_HOOKS_DIR}/* ; do
     filename=$(basename ${filepath})
