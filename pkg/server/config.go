@@ -45,7 +45,7 @@ type BaseConfig struct {
 	// transport.
 	MaxConcurrentStreams uint32
 
-	// LogLevel is the log level for the service logger.
+	// LogLevel is the log level for the service Logger.
 	LogLevel zapcore.Level
 
 	// Profile indicates whether the profiler endpoints are enabled.

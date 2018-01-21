@@ -44,7 +44,7 @@ const (
 // BaseServer is the base server components.
 type BaseServer struct {
 	config  *BaseConfig
-	logger  *zap.Logger
+	Logger  *zap.Logger
 	started chan struct{}
 	Stop    chan struct{}
 	stopped chan struct{}
@@ -65,7 +65,7 @@ func NewBaseServer(config *BaseConfig) *BaseServer {
 		stopped: make(chan struct{}),
 		health:  health.NewServer(),
 		metrics: metrics,
-		logger:  server.NewDevLogger(config.LogLevel),
+		Logger:  server.NewDevLogger(config.LogLevel),
 	}
 }
 
@@ -85,7 +85,7 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	// handle Stop signal
 	go func() {
 		<-b.Stop
-		b.logger.Info("gracefully stopping server",
+		b.Logger.Info("gracefully stopping server",
 			zap.Uint(LogServerPort, b.config.ServerPort),
 		)
 		s.GracefulStop()
@@ -97,7 +97,7 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	// set started and health status shortly after starting to serve requests
 	go func() {
 		time.Sleep(postListenNotifyWait)
-		b.logger.Info("listening for requests",
+		b.Logger.Info("listening for requests",
 			zap.Uint(LogServerPort, b.config.ServerPort),
 		)
 
@@ -110,14 +110,14 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", b.config.ServerPort))
 	if err != nil {
-		b.logger.Error("failed to listen", zap.Error(err))
+		b.Logger.Error("failed to listen", zap.Error(err))
 		return err
 	}
 	if err = s.Serve(lis); err != nil {
 		if strings.Contains(err.Error(), "use of closed network connection") {
 			return nil
 		}
-		b.logger.Error("failed to serve", zap.Error(err))
+		b.Logger.Error("failed to serve", zap.Error(err))
 		return err
 	}
 	return nil
@@ -126,7 +126,7 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 func (b *BaseServer) startAuxRoutines() {
 	go func() {
 		if err := b.metrics.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			b.logger.Error("error serving Prometheus metrics", zap.Error(err))
+			b.Logger.Error("error serving Prometheus metrics", zap.Error(err))
 			b.StopServer()
 		}
 	}()
@@ -135,7 +135,7 @@ func (b *BaseServer) startAuxRoutines() {
 		go func() {
 			profilerAddr := fmt.Sprintf(":%d", b.config.ProfilerPort)
 			if err := http.ListenAndServe(profilerAddr, nil); err != nil {
-				b.logger.Error("error serving profiler", zap.Error(err))
+				b.Logger.Error("error serving profiler", zap.Error(err))
 				b.StopServer()
 			}
 		}()
