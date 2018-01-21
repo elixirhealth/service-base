@@ -25,14 +25,7 @@
     "libri/common/errors",
     "libri/common/logging"
   ]
-  revision = "8aca73da761272a25a8c373a80550ac7e62fcb7d"
-  version = "v0.2.0"
-
-[[projects]]
-  branch = "develop"
-  name = "github.com/elxirhealth/courier"
-  packages = ["pkg/base/server/test"]
-  revision = "446d27ec6e00cc5f9a7d6badf53e139b0a9263d7"
+  revision = "df1347893b506c2eb64935347cf7c7a6ca928e9d"
 
 [[projects]]
   branch = "master"
@@ -207,6 +200,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "cdb88da557bd6431f3f9bd9b4259bb8bbd0cbfa288e427fab47a05c436189c6e"
+  inputs-digest = "7430b8f0cffc266f5c9af46747b8dfa8f83836efed5e5f95baf8b6df4bceffd7"
   solver-name = "gps-cdcl"
   solver-version = 1
