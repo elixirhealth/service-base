@@ -7,12 +7,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/elxirhealth/courier/pkg/base/server/test"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	healthpb "google.golang.org/grpc/health/grpc_health_v1"
+	"github.com/elxirhealth/service-base/pkg/server/test"
 )
 
 func TestBaseServer_Serve_ok(t *testing.T) {
