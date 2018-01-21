@@ -49,38 +49,38 @@ type BuildInfo struct {
 }
 
 func init() {
-	Current = GetBuildInfo()
+	Current = GetBuildInfo(GitBranch, GitRevision, BuildDate)
 }
 
 // GetBuildInfo gets the BuildInfo from build flags or local git repo info.
-func GetBuildInfo() BuildInfo {
+func GetBuildInfo(gitBranch, gitRevision, buildDate string) BuildInfo {
 	wd, err := os.Getwd()
 	errors.MaybePanic(err)
 	g := git{dir: wd}
 
-	if GitBranch == "" {
-		GitBranch = g.Branch()
+	if gitBranch == "" {
+		gitBranch = g.Branch()
 	}
-	if GitRevision == "" {
-		GitRevision, err = g.Commit()
+	if gitRevision == "" {
+		gitRevision, err = g.Commit()
 		errors.MaybePanic(err)
 	}
-	if BuildDate == "" {
-		BuildDate = time.Now().UTC().Format(buildDateFormat)
+	if buildDate == "" {
+		buildDate = time.Now().UTC().Format(buildDateFormat)
 	}
-	Version := semver.MustParse(semverString)
-	if GitBranch == master {
+	version := semver.MustParse(semverString)
+	if gitBranch == master {
 		// no pre-release tags to add
-	} else if GitBranch == develop {
-		Version.Pre = []semver.PRVersion{{VersionStr: snapshot}}
+	} else if gitBranch == develop {
+		version.Pre = []semver.PRVersion{{VersionStr: snapshot}}
 	} else {
-		Version.Pre = []semver.PRVersion{{VersionStr: stripPrefixes(GitBranch)}}
+		version.Pre = []semver.PRVersion{{VersionStr: stripPrefixes(gitBranch)}}
 	}
 	return BuildInfo{
-		Version:     Version,
-		GitBranch:   GitBranch,
-		GitRevision: GitRevision,
-		BuildDate:   BuildDate,
+		Version:     version,
+		GitBranch:   gitBranch,
+		GitRevision: gitRevision,
+		BuildDate:   buildDate,
 	}
 }
 
