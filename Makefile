@@ -13,6 +13,9 @@ build:
 	@echo "--> Running go build"
 	@go build $(PKGS)
 
+docker-build-image:
+	@docker build -t gcr.io/elxir-core-infra/service-base-build:latest build
+
 fix:
 	@echo "--> Running goimports"
 	@find . -name *.go | grep -v /vendor/ | xargs goimports -l -w
