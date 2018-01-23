@@ -1,6 +1,10 @@
 package server
 
 const (
-	// LogServerPort labels the port the server is listening on.
-	LogServerPort = "server_port"
+	logServerPort           = "server_port"
+	logMetricsPort          = "metrics_port"
+	logProfilerPort         = "profiler_port"
+	logMaxConcurrentStreams = "max_concurrent_streams"
+	logLogLevel             = "log_level"
+	logProfile              = "profile"
 )

@@ -52,6 +52,17 @@ type BaseConfig struct {
 	Profile bool
 }
 
+// MarshalLogObject write the config to the given object encoder.
+func (c *BaseConfig) MarshalLogObject(oe zapcore.ObjectEncoder) error {
+	oe.AddUint(logServerPort, c.ServerPort)
+	oe.AddUint(logMetricsPort, c.MetricsPort)
+	oe.AddUint(logProfilerPort, c.ProfilerPort)
+	oe.AddUint32(logMaxConcurrentStreams, c.MaxConcurrentStreams)
+	oe.AddString(logLogLevel, c.LogLevel.String())
+	oe.AddBool(logProfile, c.Profile)
+	return nil
+}
+
 // NewDefaultBaseConfig creates a new default BaseConfig.
 func NewDefaultBaseConfig() *BaseConfig {
 	return &BaseConfig{
