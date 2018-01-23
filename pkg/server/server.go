@@ -86,7 +86,7 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	go func() {
 		<-b.Stop
 		b.Logger.Info("gracefully stopping server",
-			zap.Uint(LogServerPort, b.config.ServerPort),
+			zap.Uint(logServerPort, b.config.ServerPort),
 		)
 		s.GracefulStop()
 		close(b.stopped)
@@ -98,7 +98,7 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	go func() {
 		time.Sleep(postListenNotifyWait)
 		b.Logger.Info("listening for requests",
-			zap.Uint(LogServerPort, b.config.ServerPort),
+			zap.Uint(logServerPort, b.config.ServerPort),
 		)
 
 		// set top-level health status
