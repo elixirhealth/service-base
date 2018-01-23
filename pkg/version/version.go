@@ -25,7 +25,7 @@ var (
 	BuildDate string
 )
 
-var semverString = "0.1.0"
+const currentSemverString = "0.1.0"
 
 const (
 	develop         = "develop"
@@ -49,11 +49,11 @@ type BuildInfo struct {
 }
 
 func init() {
-	Current = GetBuildInfo(GitBranch, GitRevision, BuildDate)
+	Current = GetBuildInfo(GitBranch, GitRevision, BuildDate, currentSemverString)
 }
 
 // GetBuildInfo gets the BuildInfo from build flags or local git repo info.
-func GetBuildInfo(gitBranch, gitRevision, buildDate string) BuildInfo {
+func GetBuildInfo(gitBranch, gitRevision, buildDate string, semverString string) BuildInfo {
 	wd, err := os.Getwd()
 	errors.MaybePanic(err)
 	g := git{dir: wd}
