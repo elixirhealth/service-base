@@ -7,12 +7,14 @@ import (
 	"testing"
 	"time"
 
+	"net"
+
+	"github.com/drausin/libri/libri/common/logging"
+	"github.com/elxirhealth/service-base/pkg/server/test"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	healthpb "google.golang.org/grpc/health/grpc_health_v1"
-	"github.com/elxirhealth/service-base/pkg/server/test"
 )
 
 func TestBaseServer_Serve_ok(t *testing.T) {
@@ -27,22 +29,18 @@ func TestBaseServer_Serve_ok(t *testing.T) {
 		assert.Nil(t, err)
 	}()
 
-	srv1.WaitUntilStarted()
 	srv2 := <-up
 	assert.Equal(t, srv1, srv2)
 
-	// set up clients
-	conn, err := grpc.Dial(fmt.Sprintf(":%d", c.ServerPort), grpc.WithInsecure())
-	assert.NotNil(t, conn)
+	hc, err := NewHealthChecker(
+		NewInsecureDialer(),
+		[]*net.TCPAddr{{IP: net.ParseIP("127.0.0.1"), Port: int(c.ServerPort)}},
+		server.NewDevInfoLogger(),
+	)
 	assert.Nil(t, err)
 
-	// confirm ok health check
-	clientHealth := healthpb.NewHealthClient(conn)
-	ctx1, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	rp, err := clientHealth.Check(ctx1, &healthpb.HealthCheckRequest{})
-	cancel()
-	assert.Nil(t, err)
-	assert.Equal(t, healthpb.HealthCheckResponse_SERVING, rp.Status)
+	allOk, _ := hc.Check()
+	assert.True(t, allOk)
 
 	srv1.StopServer()
 }
