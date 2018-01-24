@@ -89,6 +89,7 @@ type Dialer interface {
 
 type insecureDialer struct{}
 
+// NewInsecureDialer creates a new Dialer without any TLS.
 func NewInsecureDialer() Dialer {
 	return &insecureDialer{}
 }

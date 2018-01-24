@@ -28,6 +28,7 @@ func TestNewHealthChecker(t *testing.T) {
 	d = &fixedDialer{err: errors.New("some dial error")}
 	hc, err = NewHealthChecker(d, addrs, zap.NewNop())
 	assert.NotNil(t, err)
+	assert.Nil(t, hc)
 }
 
 func TestHealthChecker_Check(t *testing.T) {
