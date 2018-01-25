@@ -9,24 +9,6 @@ import (
 	"github.com/drausin/libri/libri/common/errors"
 )
 
-// Current contains the current build info.
-var Current BuildInfo
-
-// these variables are populated by ldflags during builds and fall back to population from git repo
-// when they're not set (e.g., during tests)
-var (
-	// GitBranch is the current git branch
-	GitBranch string
-
-	// GitRevision is the current git commit hash.
-	GitRevision string
-
-	// BuildDate is the date of the build.
-	BuildDate string
-)
-
-const currentSemverString = "0.1.0"
-
 const (
 	develop         = "develop"
 	master          = "master"
@@ -46,10 +28,6 @@ type BuildInfo struct {
 	GitBranch   string
 	GitRevision string
 	BuildDate   string
-}
-
-func init() {
-	Current = GetBuildInfo(GitBranch, GitRevision, BuildDate, currentSemverString)
 }
 
 // GetBuildInfo gets the BuildInfo from build flags or local git repo info.
