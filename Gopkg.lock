@@ -25,7 +25,8 @@
     "libri/common/errors",
     "libri/common/logging"
   ]
-  revision = "df1347893b506c2eb64935347cf7c7a6ca928e9d"
+  revision = "9a7143bdadcdd0c31f73a02b082e06221981e627"
+  version = "v0.3.0"
 
 [[projects]]
   branch = "master"
@@ -38,7 +39,7 @@
     "ptypes/duration",
     "ptypes/timestamp"
   ]
-  revision = "1e59b77b52bf8e4b449a57e6f79f21226d571845"
+  revision = "925541529c1fa6821df4e44ce2723319eb2be768"
 
 [[projects]]
   name = "github.com/grpc-ecosystem/go-grpc-prometheus"
@@ -88,9 +89,11 @@
   name = "github.com/prometheus/procfs"
   packages = [
     ".",
+    "internal/util",
+    "nfs",
     "xfs"
   ]
-  revision = "b15cd069a83443be3154b719d0cc9fe8117f09fb"
+  revision = "cb4147076ac75738c9a7d279075a253c0cc5acbd"
 
 [[projects]]
   name = "github.com/stretchr/testify"
@@ -135,7 +138,7 @@
     "lex/httplex",
     "trace"
   ]
-  revision = "5ccada7d0a7ba9aeb5d3aca8d3501b4c2a509fec"
+  revision = "0ed95abb35c445290478a5348a7b38bb154135fd"
 
 [[projects]]
   branch = "master"
@@ -162,7 +165,7 @@
   branch = "master"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
-  revision = "a8101f21cf983e773d0c1133ebc5424792003214"
+  revision = "4eb30f4778eed4c258ba66527a0d4f9ec8a36c45"
 
 [[projects]]
   name = "google.golang.org/grpc"
@@ -200,6 +203,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "7430b8f0cffc266f5c9af46747b8dfa8f83836efed5e5f95baf8b6df4bceffd7"
+  inputs-digest = "09aa65e375f2759bb12b760e6b41c12c5f9ffe65c396408e03599cd4b4e4f9f1"
   solver-name = "gps-cdcl"
   solver-version = 1

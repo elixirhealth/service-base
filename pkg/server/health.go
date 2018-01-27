@@ -58,7 +58,7 @@ func (c *healthChecker) Check() (bool, map[string]healthpb.HealthCheckResponse_S
 		if err != nil {
 			status[c.addrs[i]] = healthpb.HealthCheckResponse_UNKNOWN
 			allHealthy = false
-			c.logger.Info("librarian peer is not reachable",
+			c.logger.Info("service is not reachable",
 				zap.String(logPeerAddress, c.addrs[i]),
 			)
 			continue
@@ -66,14 +66,14 @@ func (c *healthChecker) Check() (bool, map[string]healthpb.HealthCheckResponse_S
 
 		status[c.addrs[i]] = rp.Status
 		if rp.Status == healthpb.HealthCheckResponse_SERVING {
-			c.logger.Info("librarian peer is healthy",
+			c.logger.Info("service is healthy",
 				zap.String(logPeerAddress, c.addrs[i]),
 			)
 			continue
 		}
 
 		allHealthy = false
-		c.logger.Warn("librarian peer is not healthy",
+		c.logger.Warn("service is not healthy",
 			zap.String(logPeerAddress, c.addrs[i]),
 		)
 
