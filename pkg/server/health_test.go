@@ -32,7 +32,7 @@ func TestNewHealthChecker(t *testing.T) {
 }
 
 func TestHealthChecker_Check(t *testing.T) {
-	lg := server.NewDevInfoLogger()
+	lg := logging.NewDevInfoLogger()
 	hc := &healthChecker{
 		logger: lg,
 		clients: []healthpb.HealthClient{

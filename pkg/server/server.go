@@ -65,7 +65,7 @@ func NewBaseServer(config *BaseConfig) *BaseServer {
 		stopped: make(chan struct{}),
 		health:  health.NewServer(),
 		metrics: metrics,
-		Logger:  server.NewDevLogger(config.LogLevel),
+		Logger:  logging.NewDevLogger(config.LogLevel),
 	}
 }
 

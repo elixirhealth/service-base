@@ -19,6 +19,3 @@
 #  name = "github.com/x/y"
 #  version = "2.4.0"
 
-[[constraint]]
-  name = "github.com/drausin/libri"
-  revision = "df1347893b506c2eb64935347cf7c7a6ca928e9d"

@@ -35,7 +35,7 @@ func TestBaseServer_Serve_ok(t *testing.T) {
 	hc, err := NewHealthChecker(
 		NewInsecureDialer(),
 		[]*net.TCPAddr{{IP: net.ParseIP("127.0.0.1"), Port: int(c.ServerPort)}},
-		server.NewDevInfoLogger(),
+		logging.NewDevInfoLogger(),
 	)
 	assert.Nil(t, err)
 
