@@ -23,7 +23,7 @@ fix:
 get-deps:
 	@echo "--> Getting dependencies"
 	@go get -u github.com/golang/dep/cmd/dep
-	@dep ensure
+	@dep ensure -vendor-only
 	@go get -u -v $(GOTOOLS)
 	@gometalinter --install
 
