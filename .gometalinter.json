@@ -25,6 +25,7 @@
   "Format": "({{.Linter}}): {{.Severity}}: {{.Path}}:{{.Line}}:{{if .Col}}{{.Col}}{{end}}: {{.Message}}",
   "Exclude": [
     ".+vendor/.+",
-    ".+pb\\.go"
+    ".+pb\\.go",
+    ".+bootstrap/.+"
   ]
 }
