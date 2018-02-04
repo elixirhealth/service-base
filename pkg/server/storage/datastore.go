@@ -43,4 +43,3 @@ func (c *DatastoreClientImpl) Count(ctx context.Context, q *datastore.Query) (in
 func (c *DatastoreClientImpl) Run(ctx context.Context, q *datastore.Query) *datastore.Iterator {
 	return c.inner.Run(ctx, q)
 }
-

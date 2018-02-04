@@ -23,7 +23,7 @@ In "Checkout SSH Keys" add an SSH key based on your user, so the project has acc
 
 From within (basically empty) repo, bootstrap all the goods with
 ```bash
-../service-base/bootstrap/run.sh MyService
+../service-base/.bootstrap/run.sh MyService
 ```
 where `MyService` is the CamelCase name of your service (often just a single word).
 
