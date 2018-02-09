@@ -43,3 +43,25 @@ func (c *DatastoreClientImpl) Count(ctx context.Context, q *datastore.Query) (in
 func (c *DatastoreClientImpl) Run(ctx context.Context, q *datastore.Query) *datastore.Iterator {
 	return c.Inner.Run(ctx, q)
 }
+
+// DatastoreIterator is an interface wrapper for a *datastore.Iterator to facilitate mocking in
+// tests.
+type DatastoreIterator interface {
+	Init(iter *datastore.Iterator)
+	Next(dst interface{}) (*datastore.Key, error)
+}
+
+// DatastoreIteratorImpl implements DatastoreIterator.
+type DatastoreIteratorImpl struct {
+	inner *datastore.Iterator
+}
+
+// Init initializes the iterator with the given one.
+func (i *DatastoreIteratorImpl) Init(iter *datastore.Iterator) {
+	i.inner = iter
+}
+
+// Next wraps datastore.Iterator.Next(...)
+func (i *DatastoreIteratorImpl) Next(dst interface{}) (*datastore.Key, error) {
+	return i.inner.Next(dst)
+}
