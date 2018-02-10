@@ -3,13 +3,14 @@ package server
 import (
 	"github.com/elxirhealth/service-base/pkg/server"
 	"go.uber.org/zap/zapcore"
+	"github.com/drausin/libri/libri/common/errors"
 )
 
 const (
 // TODO add default config values here
 )
 
-// Config is the config for a SERVICENAME instance.
+// Config is the config for a ServiceName instance.
 type Config struct {
 	*server.BaseConfig
 	// TODO add config elements
@@ -25,7 +26,10 @@ func NewDefaultConfig() *Config {
 
 // MarshalLogObject writes the config to the given object encoder.
 func (c *Config) MarshalLogObject(oe zapcore.ObjectEncoder) error {
-	// TODO
+	err := c.BaseConfig.MarshalLogObject(oe)
+	errors.MaybePanic(err) // should never happen
+
+	// TODO add other config elements
 	return nil
 }
 
