@@ -77,8 +77,9 @@ func (i *DatastoreIteratorImpl) Next(dst interface{}) (*datastore.Key, error) {
 	return i.inner.Next(dst)
 }
 
-//  StartDatastoreEmulator starts the DataStore emulator.
+// StartDatastoreEmulator starts the DataStore emulator.
 func StartDatastoreEmulator(dataDir string) *os.Process {
+	// nolint: gas
 	cmd := exec.Command("gcloud", "beta", "emulators", "datastore", "start",
 		"--no-store-on-disk",
 		"--host-port", datastoreEmulatorAddr,
@@ -91,7 +92,8 @@ func StartDatastoreEmulator(dataDir string) *os.Process {
 
 	err := cmd.Start()
 	errors.MaybePanic(err)
-	os.Setenv(datastoreEmulatorHostEnv, datastoreEmulatorAddr)
+	err = os.Setenv(datastoreEmulatorHostEnv, datastoreEmulatorAddr)
+	errors.MaybePanic(err)
 	return cmd.Process
 }
 
