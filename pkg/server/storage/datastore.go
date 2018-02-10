@@ -3,6 +3,17 @@ package storage
 import (
 	"cloud.google.com/go/datastore"
 	"context"
+	"os"
+	"os/exec"
+	"syscall"
+	"github.com/drausin/libri/libri/common/errors"
+	"log"
+)
+
+const (
+	datastoreEmulatorHostEnv = "DATASTORE_EMULATOR_HOST"
+	datastoreEmulatorAddr    = "localhost:2002"
+	dummyDatastoreProject    = "dummy-datastore-test"
 )
 
 // DatastoreClient is a interface wrapper for a *datastore.Client to facilitate mocking in tests.
@@ -64,4 +75,31 @@ func (i *DatastoreIteratorImpl) Init(iter *datastore.Iterator) {
 // Next wraps datastore.Iterator.Next(...)
 func (i *DatastoreIteratorImpl) Next(dst interface{}) (*datastore.Key, error) {
 	return i.inner.Next(dst)
+}
+
+//  StartDatastoreEmulator starts the DataStore emulator.
+func StartDatastoreEmulator(dataDir string) *os.Process {
+	cmd := exec.Command("gcloud", "beta", "emulators", "datastore", "start",
+		"--no-store-on-disk",
+		"--host-port", datastoreEmulatorAddr,
+		"--project", dummyDatastoreProject,
+		"--data-dir", dataDir,
+	)
+	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Start()
+	errors.MaybePanic(err)
+	os.Setenv(datastoreEmulatorHostEnv, datastoreEmulatorAddr)
+	return cmd.Process
+}
+
+// StopDatastoreEmulator stops the DataStore emulator.
+func StopDatastoreEmulator(process *os.Process) {
+	pgid, err := syscall.Getpgid(process.Pid)
+	errors.MaybePanic(err)
+	err = syscall.Kill(-pgid, syscall.SIGKILL)
+	errors.MaybePanic(err)
+	log.Printf("stopped child processes under pid %d\n", pgid)
 }
