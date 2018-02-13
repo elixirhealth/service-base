@@ -29,6 +29,10 @@ Init deps
 ```bash
 dep init
 ```
+Install git hooks
+```bash
+make install-git-hooks
+```
 
 Start fleshing out simple GRPC api and then run
 ```bash
@@ -38,11 +42,18 @@ to make sure things work ok. Then you can run
 ```bash
 make test
 ```
-to make sure all the tests pass. Once that works, you can push this bootstrapped stuff on a branch
+to make sure all the tests pass. Check lint via
+```bash
+make lint
+```
+Once those work, you can push this bootstrapped stuff on a branch
 ```bash
 git checkout -b feature/initial-bootstrap
 git add .
 git commit -m "initial bootstrap"
 git push origin feature/initial-bootstrap
 ```
-You should see the build
+You should see the build.
+
+If using Goland as your IDE, in Preferences -> Go -> Imports, set "Sorting type" to "goimports" and check all the boxes. in Preferences -> Tools -> File Watchers, add a "goimports" file watcher (with default settings).
+
