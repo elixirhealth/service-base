@@ -4,7 +4,7 @@ Create the repo in GitHub under []elxirhealth org](https://github.com/elxirhealt
 
 Branch `develop` off `master` branch and push to GitHub.
 ```bash
-git branch -b develop
+git checkout -b develop
 git push origin develop
 ```
 In repo settings in GitHub, 
@@ -14,11 +14,9 @@ In repo settings in GitHub,
 Add new repo to CircleCI [elxirhealth org](https://circleci.com/gh/elxirhealth). Initial build will fail
 because there's no config. That's ok. 
 
-In the settings for the new CircleCI project you just created, add a new environment variable `GCR_SVC_JSON`
-with a value pasted from
-```bash
-cat ~/.gcloud/keys/elxir-core-infra.container-registry-ro.json | pbcopy
-```
+In the settings for the new CircleCI project you just created, import the environment variable `GCR_SVC_JSON`
+from that in the `courier` project.
+
 In "Checkout SSH Keys" add an SSH key based on your user, so the project has access to the same repos you do.
 
 From within (basically empty) repo, bootstrap all the goods with

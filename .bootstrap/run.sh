@@ -14,7 +14,7 @@ working_dir=$(pwd)
 bootstrap_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 cp -r ${bootstrap_dir}/template/* ${working_dir}
-cp -r ${bootstrap_dir}/template/.* ${working_dir}
+cp -r ${bootstrap_dir}/template/. ${working_dir}
 
 # move directories and files
 for f_tmpl in $(find ${working_dir} -type d -name 'servicename*'); do
