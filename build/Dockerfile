@@ -29,14 +29,27 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
     google-cloud-sdk-datastore-emulator=${CLOUD_SDK_VERSION}-0
 
 ENV GOPATH "/go"
+ENV BUILD_USER "builder"
+RUN useradd -ms /bin/bash builder
 
-# install postgres
+# install Postgres
 ENV POSTGRES_VERSION 10
 RUN export POSTGRES_REPO="stretch-pgdg" && \
     echo "deb http://apt.postgresql.org/pub/repos/apt ${POSTGRES_REPO} main" | tee -a /etc/apt/sources.list.d/pgdg.list && \
     curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
     apt-get update && apt-get install -y \
     postgresql-${POSTGRES_VERSION} \
-    postgresql-contrib-${POSTGRES_VERSION}
+    postgresql-contrib-${POSTGRES_VERSION} && \
+    chown -R ${BUILD_USER} /var/lib/postgresql && \
+    chown -R ${BUILD_USER} /run/postgresql && \
+    chown -R ${BUILD_USER} /var/log/postgresql && \
+    rm /var/log/postgresql/* && \
+    rm -r /var/lib/postgresql/${POSTGRES_VERSION}/*
+
+USER ${BUILD_USER}
+
+# init Postgres tests server
+ENV PATH="/usr/lib/postgresql/${POSTGRES_VERSION}/bin:${PATH}"
+RUN pg_ctl -D /var/lib/postgresql/${POSTGRES_VERSION}/tests -l /var/log/postgresql/tests.log init
 
 ENTRYPOINT ["/bin/bash"]
