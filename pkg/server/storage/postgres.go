@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"testing"
 
+	"os"
+
 	_ "github.com/lib/pq"
 	"github.com/mattes/migrate"
 	_ "github.com/mattes/migrate/database/postgres"
@@ -65,8 +67,12 @@ func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 
 	// exponential backoff-retry, because the application in the container might not be ready
 	// to accept connections yet
-	dbURL = fmt.Sprintf("postgres://postgres:%s@localhost:%s/%s?sslmode=disable",
-		postgresTestPassword, resource.GetPort("5432/tcp"), postgresTestDatabase)
+	host := "localhost"
+	if os.Getenv("DOCKER_HOST") != "" {
+		host = os.Getenv("DOCKER_HOST")
+	}
+	dbURL = fmt.Sprintf("postgres://postgres:%s@%s:%s/%s?sslmode=disable",
+		postgresTestPassword, host, resource.GetPort("5432/tcp"), postgresTestDatabase)
 	if err := pool.Retry(func() error {
 		var err error
 		db, err := sql.Open("postgres", dbURL)

@@ -1,13 +1,14 @@
 package storage
 
 import (
-	"cloud.google.com/go/datastore"
 	"context"
+	"log"
 	"os"
 	"os/exec"
 	"syscall"
+
+	"cloud.google.com/go/datastore"
 	"github.com/drausin/libri/libri/common/errors"
-	"log"
 )
 
 const (
