@@ -12,6 +12,7 @@ import (
 	_ "github.com/mattes/migrate/database/postgres"
 	"github.com/mattes/migrate/source/go-bindata"
 	"gopkg.in/ory-am/dockertest.v3"
+	"log"
 )
 
 const (
@@ -68,11 +69,13 @@ func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 	// exponential backoff-retry, because the application in the container might not be ready
 	// to accept connections yet
 	host := "localhost"
-	if os.Getenv("DOCKER_HOST") != "" {
-		host = os.Getenv("DOCKER_HOST")
+	if dockerHost := os.Getenv("DOCKER_HOST"); dockerHost != "" {
+		host = dockerHost
+		log.Printf("docker host: %s\n", host)
 	}
 	dbURL = fmt.Sprintf("postgres://postgres:%s@%s:%s/%s?sslmode=disable",
 		postgresTestPassword, host, resource.GetPort("5432/tcp"), postgresTestDatabase)
+	log.Printf("dbUrl: %s\n", dbURL)
 	if err := pool.Retry(func() error {
 		var err error
 		db, err := sql.Open("postgres", dbURL)
