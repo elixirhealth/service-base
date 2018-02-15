@@ -2,20 +2,23 @@ package storage
 
 import (
 	"database/sql"
-	"fmt"
 	"testing"
 
+	"os/exec"
+	"time"
+
+	"github.com/cenkalti/backoff"
 	_ "github.com/lib/pq"
 	"github.com/mattes/migrate"
 	_ "github.com/mattes/migrate/database/postgres"
 	"github.com/mattes/migrate/source/go-bindata"
-	"gopkg.in/ory-am/dockertest.v3"
 )
 
 const (
-	postgresTestDatabase   = "test"
-	postgresTestPassword   = "test-pass"
-	postgresDockerImageTag = "10.2-alpine"
+	// these vars assume the particular installation settings and paths found in the Docker
+	// gcr.io/elxir-core-infra/service-base-build image
+	postgresTestServerDir = "/var/lib/postgresql/10/tests"
+	postgresTestServerLog = "/var/log/postgresql/tests.log"
 )
 
 // SetUpTestPostgresDB migrates the DB with the given URL and asset source.
@@ -41,43 +44,39 @@ func NewMigrate(dbURL string, as *bindata.AssetSource) (*migrate.Migrate, error)
 	return migrate.NewWithSourceInstance("go-bindata", d, dbURL)
 }
 
-// StartTestPostgres starts a Postgres Docker container for use in testing. It returns the
-// database URL, a function to clean up container after tests are finished, and an error (usually
-// nil).
 func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
-	// uses a sensible default on windows (tcp/http) and linux/osx (socket)
-	pool, err := dockertest.NewPool("")
 	cleanup = func() error { return nil }
-	if err != nil {
-		return "", cleanup, fmt.Errorf("could not connect to docker: %s", err)
+	cmd := exec.Command("pg_ctl",
+		"-D", postgresTestServerDir,
+		"-l", postgresTestServerLog,
+		"start")
+
+	if err := cmd.Run(); err != nil {
+		return "", cleanup, err
+	}
+	cleanup = func() error {
+		cmd := exec.Command("pg_ctl",
+			"-D", postgresTestServerDir,
+			"-l", postgresTestServerLog,
+			"stop")
+		return cmd.Run()
 	}
 
-	// pulls an image, creates a container based on it and runs it
-	envVars := []string{
-		"POSTGRES_PASSWORD=" + postgresTestPassword,
-		"POSTGRES_DB=" + postgresTestDatabase,
-	}
-	resource, err := pool.Run("postgres", postgresDockerImageTag, envVars)
-	if err != nil {
-		return "", cleanup, fmt.Errorf("could not start resource: %s", err)
-	}
-	cleanup = func() error { return pool.Purge(resource) }
-
-	// exponential backoff-retry, because the application in the container might not be ready
-	// to accept connections yet
-	portMap := "5432/tcp"
-	dbURL = fmt.Sprintf("postgres://postgres:%s@%s:%s/%s?sslmode=disable",
-		postgresTestPassword, resource.GetBoundIP(portMap), resource.GetPort(portMap),
-		postgresTestDatabase)
-	if err := pool.Retry(func() error {
+	dbURL = "postgres://localhost:5432/postgres?sslmode=disable"
+	op := func() error {
 		var err error
 		db, err := sql.Open("postgres", dbURL)
 		if err != nil {
 			return err
 		}
 		return db.Ping()
-	}); err != nil {
-		return "", cleanup, fmt.Errorf("could not connect to docker: %s", err)
 	}
+	bo := backoff.NewExponentialBackOff()
+	bo.MaxInterval = time.Second * 1
+	bo.MaxElapsedTime = 10 * time.Second
+	if err := backoff.Retry(op, bo); err != nil {
+		return "", cleanup, err
+	}
+
 	return dbURL, cleanup, nil
 }
