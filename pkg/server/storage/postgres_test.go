@@ -18,15 +18,15 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	dbUrl, cleanup, err := StartTestPostgres()
+	dbURL, cleanup, err := StartTestPostgres()
 	if err != nil {
-		if err := cleanup(); err != nil {
-			log.Fatal(err.Error())
+		if err2 := cleanup(); err2 != nil {
+			log.Fatal(err2.Error())
 		}
 		log.Fatal(err.Error())
 	}
 	setUpPostgresTest = func(t *testing.T) (string, func() error) {
-		return dbUrl, SetUpTestPostgresDB(t, dbUrl, bindata.Resource(
+		return dbURL, SetUpTestPostgresDB(t, dbURL, bindata.Resource(
 			test.AssetNames(),
 			func(name string) ([]byte, error) { return test.Asset(name) },
 		))

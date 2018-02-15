@@ -2,15 +2,14 @@ package storage
 
 import (
 	"database/sql"
-	"testing"
-
 	"os/exec"
+	"testing"
 	"time"
 
 	"github.com/cenkalti/backoff"
-	_ "github.com/lib/pq"
+	_ "github.com/lib/pq" // loads "postgres" driver for database/sql
 	"github.com/mattes/migrate"
-	_ "github.com/mattes/migrate/database/postgres"
+	_ "github.com/mattes/migrate/database/postgres" // loads "postgres" driver for migrate
 	"github.com/mattes/migrate/source/go-bindata"
 )
 
@@ -27,11 +26,7 @@ func SetUpTestPostgresDB(t *testing.T, dbURL string, as *bindata.AssetSource) fu
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	bo := backoff.NewExponentialBackOff()
-	bo.MaxInterval = time.Second * 1
-	bo.MaxElapsedTime = 10 * time.Second
-	if err := backoff.Retry(m.Up, bo); err != nil {
+	if err := backoff.Retry(m.Up, newShortExpBackoff()); err != nil {
 		t.Fatal(err)
 	}
 	cleanup := func() error {
@@ -58,6 +53,11 @@ func NewMigrate(dbURL string, as *bindata.AssetSource) (*migrate.Migrate, error)
 	return migrate.NewWithSourceInstance("go-bindata", d, dbURL)
 }
 
+// StartTestPostgres starts a Postgres server for tests to use. It assumes that pg_ctl is available
+// in the PATH and that the postgresTestServerDir and postgresTestServerLog are valid paths. This
+// generally will only be the case when running inside of a
+// gcr.io/elxir-core-infra/service-base-build Docker container.
+// nolint: gas
 func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 	cleanup = func() error { return nil }
 	cmd := exec.Command("pg_ctl",
@@ -85,12 +85,16 @@ func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 		}
 		return db.Ping()
 	}
-	bo := backoff.NewExponentialBackOff()
-	bo.MaxInterval = time.Second * 1
-	bo.MaxElapsedTime = 10 * time.Second
-	if err := backoff.Retry(op, bo); err != nil {
+	if err := backoff.Retry(op, newShortExpBackoff()); err != nil {
 		return "", cleanup, err
 	}
 
 	return dbURL, cleanup, nil
+}
+
+func newShortExpBackoff() backoff.BackOff {
+	bo := backoff.NewExponentialBackOff()
+	bo.MaxInterval = time.Second * 1
+	bo.MaxElapsedTime = 10 * time.Second
+	return bo
 }
