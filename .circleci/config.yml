@@ -10,6 +10,7 @@ jobs:
     working_directory: /go/src/github.com/elxirhealth/service-base
     steps:
       - checkout
+      - setup_remote_docker
       - restore_cache:
           keys:
             - v1-vendor-{{ arch }}-{{ checksum "Gopkg.lock" }}

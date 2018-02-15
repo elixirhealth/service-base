@@ -7,9 +7,9 @@ import (
 	cerrors "github.com/drausin/libri/libri/common/errors"
 	"github.com/drausin/libri/libri/common/logging"
 	bserver "github.com/elxirhealth/service-base/pkg/server"
+	"github.com/elxirhealth/servicename/pkg/server"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/elxirhealth/servicename/pkg/server"
 )
 
 const (
