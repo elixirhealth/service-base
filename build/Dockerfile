@@ -30,4 +30,13 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 
 ENV GOPATH "/go"
 
+# install postgres
+ENV POSTGRES_VERSION 10
+RUN export POSTGRES_REPO="stretch-pgdg" && \
+    echo "deb http://apt.postgresql.org/pub/repos/apt ${POSTGRES_REPO} main" | tee -a /etc/apt/sources.list.d/pgdg.list && \
+    curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - && \
+    apt-get update && apt-get install -y \
+    postgresql-${POSTGRES_VERSION} \
+    postgresql-contrib-${POSTGRES_VERSION}
+
 ENTRYPOINT ["/bin/bash"]
