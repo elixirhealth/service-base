@@ -27,8 +27,11 @@ func SetUpTestPostgresDB(t *testing.T, dbURL string, as *bindata.AssetSource) fu
 	if err != nil {
 		t.Fatal(err)
 	}
-	err = m.Up()
-	if err != nil {
+
+	bo := backoff.NewExponentialBackOff()
+	bo.MaxInterval = time.Second * 1
+	bo.MaxElapsedTime = 10 * time.Second
+	if err := backoff.Retry(m.Up, bo); err != nil {
 		t.Fatal(err)
 	}
 	return m.Down
