@@ -34,7 +34,18 @@ func SetUpTestPostgresDB(t *testing.T, dbURL string, as *bindata.AssetSource) fu
 	if err := backoff.Retry(m.Up, bo); err != nil {
 		t.Fatal(err)
 	}
-	return m.Down
+	cleanup := func() error {
+		if err := m.Down(); err != nil {
+			return err
+		}
+		if err1, err2 := m.Close(); err1 != nil {
+			return err1
+		} else if err2 != nil {
+			return err2
+		}
+		return nil
+	}
+	return cleanup
 }
 
 // NewMigrate creates a new *migrate.Migrate instance from the given database URL and migration
