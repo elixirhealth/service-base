@@ -157,6 +157,7 @@ func (b *BaseServer) WaitUntilStarted() {
 
 // StopServer handles cleanup involved in closing down the server.
 func (b *BaseServer) StopServer() {
+	b.Logger.Info("gracefully stopping server")
 	// send Stop signal to listener
 	select {
 	case <-b.Stop: // already closed
@@ -175,6 +176,7 @@ func (b *BaseServer) StopServer() {
 
 	// wait for server to Stop
 	<-b.stopped
+	b.Logger.Info("stopped server")
 }
 
 // State returns the state of the server. The state is a finite state machine, that progresses from
