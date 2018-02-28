@@ -5,9 +5,10 @@ set -eou pipefail
 
 docker_cleanup() {
     echo "cleaning up existing network and containers..."
-    docker ps | grep -E 'libri|servicename' | awk '{print $1}' | xargs -I {} docker stop {} || true
-    docker ps -a | grep -E 'libri|servicename' | awk '{print $1}' | xargs -I {} docker rm {} || true
-    docker network list | grep 'servicename' | awk '{print $2}' | xargs -I {} docker network rm {} || true
+    CONTAINERS='libri|servicename'
+    docker ps | grep -E ${CONTAINERS} | awk '{print $1}' | xargs -I {} docker stop {} || true
+    docker ps -a | grep -E ${CONTAINERS} | awk '{print $1}' | xargs -I {} docker rm {} || true
+    docker network list | grep ${CONTAINERS} | awk '{print $2}' | xargs -I {} docker network rm {} || true
 }
 
 # optional settings (generally defaults should be fine, but sometimes useful for debugging)
@@ -33,7 +34,7 @@ docker network create servicename
 echo
 echo "starting servicename..."
 port=10100
-name="servicename-${c}"
+name="servicename-0"
 docker run --name "${name}" --net=servicename -d -p ${port}:${port} ${SERVICENAME_IMAGE} \
     start \
     --logLevel "${SERVICENAME_LOG_LEVEL}" \

@@ -23,7 +23,7 @@ func init() {
 		"space-separated addresses of servicename(s)")
 
 	// bind viper flags
-	viper.SetEnvPrefix(envVarPrefix) // look for env vars with "LIBRI_" prefix
+	viper.SetEnvPrefix(envVarPrefix) // look for env vars with prefix
 	viper.AutomaticEnv()             // read in environment variables that match
 	cerrors.MaybePanic(viper.BindPFlags(testCmd.PersistentFlags()))
 }
