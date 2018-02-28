@@ -6,6 +6,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"
+	"github.com/elxirhealth/service-base/pkg/cmd"
 )
 
 func TestGetServiceNameConfig(t *testing.T) {
@@ -16,11 +17,11 @@ func TestGetServiceNameConfig(t *testing.T) {
 	profile := true
 	// TODO add other non-default config values
 
-	viper.Set(serverPortFlag, serverPort)
-	viper.Set(metricsPortFlag, metricsPort)
-	viper.Set(profilerPortFlag, profilerPort)
-	viper.Set(logLevelFlag, logLevel)
-	viper.Set(profileFlag, profile)
+	viper.Set(cmd.ServerPortFlag, serverPort)
+	viper.Set(cmd.MetricsPortFlag, metricsPort)
+	viper.Set(cmd.ProfilerPortFlag, profilerPort)
+	viper.Set(cmd.LogLevelFlag, logLevel)
+	viper.Set(cmd.ProfileFlag, profile)
 	// TODO set other non-default config value
 
 	c, err := getServiceNameConfig()

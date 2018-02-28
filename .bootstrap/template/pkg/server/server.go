@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/elxirhealth/service-base/pkg/server"
+	"github.com/elxirhealth/servicename/pkg/server/storage"
 )
 
 // ServiceName implements the ServiceNameServer interface.
@@ -9,19 +10,24 @@ type ServiceName struct {
 	*server.BaseServer
 	config *Config
 
-	// TODO add other things here
+	storer storage.Storer
+	// TODO maybe add other things here
 }
 
 // newServiceName creates a new ServiceNameServer from the given config.
 func newServiceName(config *Config) (*ServiceName, error) {
 	baseServer := server.NewBaseServer(config.BaseConfig)
-
-	// TODO add other init
+	storer, err := getStorer(config, baseServer.Logger)
+	if err != nil {
+		return nil, err
+	}
+	// TODO maybe add other init
 
 	return &ServiceName{
 		BaseServer: baseServer,
 		config:     config,
-		// TODO add other things
+		storer: storer,
+		// TODO maybe add other things
 	}, nil
 }
 

@@ -10,8 +10,9 @@ func TestNewServiceName_ok(t *testing.T) {
 	config := NewDefaultConfig()
 	c, err := newServiceName(config)
 	assert.Nil(t, err)
-	// TODO assert NotNil on other elements of server struct
 	assert.Equal(t, config, c.config)
+	assert.NotEmpty(t, c.storer)
+	// TODO assert.NotEmpty on other elements of server struct
 }
 
 func TestNewServiceName_err(t *testing.T) {

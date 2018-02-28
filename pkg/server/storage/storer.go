@@ -1,7 +1,5 @@
 package storage
 
-import "go.uber.org/zap/zapcore"
-
 // Type indicates the storage backend type.
 type Type int
 
@@ -21,12 +19,6 @@ const (
 	Postgres
 )
 
-var (
-	// DefaultStorage is the default storage type.
-	DefaultStorage = Memory
-)
-
-
 func (t Type) String() string {
 	switch t {
 	case Memory:
@@ -39,24 +31,3 @@ func (t Type) String() string {
 		return "Unspecified"
 	}
 }
-
-
-// Parameters defines the parameters of the Storer.
-type Parameters struct {
-	Type               Type
-}
-
-// NewDefaultParameters returns a *Parameters object with default values.
-func NewDefaultParameters() *Parameters {
-	return &Parameters{
-		Type:               DefaultStorage,
-	}
-}
-
-// MarshalLogObject writes the parameters to the given object encoder.
-func (p *Parameters) MarshalLogObject(oe zapcore.ObjectEncoder) error {
-	oe.AddString(logStorageType, p.Type.String())
-	return nil
-}
-
-
