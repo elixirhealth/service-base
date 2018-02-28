@@ -91,6 +91,7 @@ func (bm *bindataMigrator) Down() error {
 
 func (bm *bindataMigrator) newInner() *migrate.Migrate {
 	d, err := bindata.WithInstance(bm.as)
+	errors.MaybePanic(err) // should never happen
 	m, err := migrate.NewWithSourceInstance("go-bindata", d, bm.dbURL)
 	errors.MaybePanic(err) // should never happen
 	m.Log = bm.logger
@@ -154,7 +155,7 @@ func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 			"stop")
 		return stopCmd.Run()
 	}
-	if err := dbReady(dbURL, false); err == nil {
+	if err = dbReady(dbURL, false); err == nil {
 		// DB already running (perhaps from previous test, so don't try to start again
 		return dbURL, cleanup, nil
 	}
@@ -162,7 +163,7 @@ func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 		"-D", postgresTestServerDir,
 		"-l", postgresTestServerLog,
 		"start")
-	if err := startCmd.Run(); err != nil {
+	if err = startCmd.Run(); err != nil {
 		noCleanup := func() error { return nil }
 		return "", noCleanup, err
 	}
