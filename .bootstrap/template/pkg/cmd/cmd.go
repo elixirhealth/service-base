@@ -4,21 +4,21 @@ import (
 	"log"
 
 	"github.com/drausin/libri/libri/common/errors"
+	"github.com/drausin/libri/libri/common/logging"
 	"github.com/elxirhealth/service-base/pkg/cmd"
 	bserver "github.com/elxirhealth/service-base/pkg/server"
+	"github.com/elxirhealth/servicename/pkg/server"
 	"github.com/elxirhealth/servicename/version"
 	"github.com/spf13/cobra"
-	"github.com/elxirhealth/servicename/pkg/server"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
-	"github.com/drausin/libri/libri/common/logging"
 )
 
 const (
-	serviceNameLower     = "servicename"
-	serviceNameCamel     = "ServiceName"
-	envVarPrefix         = "SERVICENAME"
-	logLevelFlag         = "logLevel"
+	serviceNameLower = "servicename"
+	serviceNameCamel = "ServiceName"
+	envVarPrefix     = "SERVICENAME"
+	logLevelFlag     = "logLevel"
 
 	// TODO uncomment or delete
 	//storageMemoryFlag    = "storageMemory"
@@ -66,7 +66,6 @@ func Execute() {
 		log.Fatal(err)
 	}
 }
-
 
 func start() error {
 	config, err := getServiceNameConfig()

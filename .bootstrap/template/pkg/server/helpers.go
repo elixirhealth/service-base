@@ -1,11 +1,10 @@
 package server
 
-
 import (
 	"errors"
 
-	"github.com/elxirhealth/servicename/pkg/server/storage"
 	bstorage "github.com/elxirhealth/service-base/pkg/server/storage"
+	"github.com/elxirhealth/servicename/pkg/server/storage"
 	"go.uber.org/zap"
 )
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"os"
 	"testing"
+
 	"github.com/elxirhealth/service-base/version"
 )
 

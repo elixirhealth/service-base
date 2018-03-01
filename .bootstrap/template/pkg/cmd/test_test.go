@@ -5,11 +5,11 @@ import (
 	"sync"
 	"testing"
 
+	"github.com/elxirhealth/service-base/pkg/cmd"
 	"github.com/elxirhealth/servicename/pkg/server"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"
-	"github.com/elxirhealth/service-base/pkg/cmd"
 )
 
 func TestTestIO(t *testing.T) {

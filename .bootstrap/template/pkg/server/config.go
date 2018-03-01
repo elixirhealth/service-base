@@ -3,8 +3,8 @@ package server
 import (
 	"github.com/drausin/libri/libri/common/errors"
 	"github.com/elxirhealth/service-base/pkg/server"
-	"go.uber.org/zap/zapcore"
 	"github.com/elxirhealth/servicename/pkg/server/storage"
+	"go.uber.org/zap/zapcore"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 // Config is the config for a ServiceName instance.
 type Config struct {
 	*server.BaseConfig
-	Storage      *storage.Parameters
+	Storage *storage.Parameters
 	// TODO add config elements
 }
 
@@ -25,7 +25,7 @@ func NewDefaultConfig() *Config {
 	}
 	return config.
 		WithDefaultStorage()
-		// TODO add .WithDefaultCONFIGELEMENT for each CONFIGELEMENT
+	// TODO add .WithDefaultCONFIGELEMENT for each CONFIGELEMENT
 }
 
 // MarshalLogObject writes the config to the given object encoder.
