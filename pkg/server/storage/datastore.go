@@ -19,9 +19,9 @@ const (
 
 // DatastoreClient is a interface wrapper for a *datastore.Client to facilitate mocking in tests.
 type DatastoreClient interface {
-	Put(key *datastore.Key, value interface{}) (*datastore.Key, error)
-	Get(key *datastore.Key, dest interface{}) error
-	Delete(keys []*datastore.Key) error
+	Put(ctx context.Context, key *datastore.Key, value interface{}) (*datastore.Key, error)
+	Get(ctx context.Context, key *datastore.Key, dest interface{}) error
+	Delete(ctx context.Context, keys []*datastore.Key) error
 	Count(ctx context.Context, q *datastore.Query) (int, error)
 	Run(ctx context.Context, q *datastore.Query) *datastore.Iterator
 }
@@ -32,18 +32,22 @@ type DatastoreClientImpl struct {
 }
 
 // Get wraps datastore.Client.Get(...)
-func (c *DatastoreClientImpl) Get(key *datastore.Key, dest interface{}) error {
-	return c.Inner.Get(context.Background(), key, dest)
+func (c *DatastoreClientImpl) Get(
+	ctx context.Context, key *datastore.Key, dest interface{},
+) error {
+	return c.Inner.Get(ctx, key, dest)
 }
 
 // Put wraps datastore.Client.Put(...)
-func (c *DatastoreClientImpl) Put(key *datastore.Key, value interface{}) (*datastore.Key, error) {
-	return c.Inner.Put(context.Background(), key, value)
+func (c *DatastoreClientImpl) Put(
+	ctx context.Context, key *datastore.Key, value interface{},
+) (*datastore.Key, error) {
+	return c.Inner.Put(ctx, key, value)
 }
 
 // Delete wraps datastore.Client.Delete(...)
-func (c *DatastoreClientImpl) Delete(keys []*datastore.Key) error {
-	return c.Inner.DeleteMulti(context.Background(), keys)
+func (c *DatastoreClientImpl) Delete(ctx context.Context, keys []*datastore.Key) error {
+	return c.Inner.DeleteMulti(ctx, keys)
 }
 
 // Count wraps datastore.Client.Count(...)
