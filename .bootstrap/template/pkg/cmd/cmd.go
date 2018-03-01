@@ -11,6 +11,7 @@ import (
 	"github.com/elxirhealth/servicename/pkg/server"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
+	"github.com/drausin/libri/libri/common/logging"
 )
 
 const (
@@ -77,11 +78,11 @@ func start() error {
 
 func getServiceNameConfig() (*server.Config, error) {
 	c := server.NewDefaultConfig()
-	c.WithServerPort(uint(viper.GetInt(serverPortFlag))).
-		WithMetricsPort(uint(viper.GetInt(metricsPortFlag))).
-		WithProfilerPort(uint(viper.GetInt(profilerPortFlag))).
+	c.WithServerPort(uint(viper.GetInt(cmd.ServerPortFlag))).
+		WithMetricsPort(uint(viper.GetInt(cmd.MetricsPortFlag))).
+		WithProfilerPort(uint(viper.GetInt(cmd.ProfilerPortFlag))).
 		WithLogLevel(logging.GetLogLevel(viper.GetString(logLevelFlag))).
-		WithProfile(viper.GetBool(profileFlag))
+		WithProfile(viper.GetBool(cmd.ProfileFlag))
 	// TODO set other config elements here
 
 	return c, nil
