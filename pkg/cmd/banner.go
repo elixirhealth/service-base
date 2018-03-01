@@ -8,7 +8,6 @@ import (
 
 	cerrors "github.com/drausin/libri/libri/common/errors"
 	"github.com/elxirhealth/service-base/pkg/version"
-	"strings"
 )
 
 const bannerTemplate = `

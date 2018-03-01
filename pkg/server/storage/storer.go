@@ -19,6 +19,7 @@ const (
 	Postgres
 )
 
+// String returns a string representation of the type.
 func (t Type) String() string {
 	switch t {
 	case Memory:

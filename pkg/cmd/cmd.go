@@ -16,16 +16,37 @@ import (
 )
 
 const (
+	// AddressesFlag gives the flag for the server addresses.
 	AddressesFlag    = "addresses"
+
+	// LogLevelFlag gives the flag for the server log level.
 	LogLevelFlag     = "logLevel"
+
+	// TimeoutFlag gives the flag for the timeout of requests to the server.
 	TimeoutFlag      = "timeout"
+
+	// ServerPortFlag gives the flag for the main port for the server to listen to requests on.
 	ServerPortFlag   = "serverPort"
+
+	// MetricsPortFlag gives the flag for the port to serve metrics on.
 	MetricsPortFlag  = "metricsPort"
+
+	// ProfilerPortFlag gives the flag for the port to serve profiling info on.
 	ProfilerPortFlag = "profilerPort"
+
+	// ProfileFlag gives the flag for whether the profiler is enabled or not.
 	ProfileFlag      = "profile"
 )
 
-func Start(serviceName string, serviceNameCamel string, parent *cobra.Command, bi version.BuildInfo, start func() error, defineFlags func(flags *pflag.FlagSet)) *cobra.Command {
+// Start returns the command to start the server via the passed in start func.
+func Start(
+	serviceName string,
+	serviceNameCamel string,
+	parent *cobra.Command,
+	bi version.BuildInfo,
+	start func() error,
+	defineFlags func(flags *pflag.FlagSet),
+) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "start",
 		Short: fmt.Sprintf("start a %s server", serviceName),
@@ -52,6 +73,7 @@ func Start(serviceName string, serviceNameCamel string, parent *cobra.Command, b
 	return cmd
 }
 
+// Test returns the parent command for testing one or more servers.
 func Test(serviceName string, parent *cobra.Command) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "test",
@@ -67,6 +89,7 @@ func Test(serviceName string, parent *cobra.Command) *cobra.Command {
 	return cmd
 }
 
+// TestHealth returns the command for testing the health of one or more servers.
 func TestHealth(serviceName string, parent *cobra.Command) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "health",
@@ -86,7 +109,13 @@ func TestHealth(serviceName string, parent *cobra.Command) *cobra.Command {
 	return cmd
 }
 
-func TestIO(serviceName string, parent *cobra.Command, testIO func() error, defineFlags func(flags *pflag.FlagSet)) *cobra.Command {
+// TestIO returns the command for testing the I/O of one or more servers.
+func TestIO(
+	serviceName string,
+	parent *cobra.Command,
+	testIO func() error,
+	defineFlags func(flags *pflag.FlagSet),
+) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "io",
 		Short: fmt.Sprintf("test input/output of one or more %s servers", serviceName),
@@ -106,13 +135,16 @@ func TestIO(serviceName string, parent *cobra.Command, testIO func() error, defi
 	return cmd
 }
 
+// Version returns the command for printing the server version.
 func Version(serviceName string, parent *cobra.Command, info version.BuildInfo) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",
 		Short: fmt.Sprintf("print the %s version", serviceName),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			_, err := os.Stdout.WriteString(info.Version.String() + "\n")
-			return err
+		Run: func(cmd *cobra.Command, args []string) {
+			versionStr := info.Version.String() + "\n"
+			if _, err := os.Stdout.WriteString(versionStr); err != nil {
+				log.Fatal(err)
+			}
 		},
 	}
 
