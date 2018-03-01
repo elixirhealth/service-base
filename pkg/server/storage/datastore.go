@@ -20,7 +20,9 @@ const (
 // DatastoreClient is a interface wrapper for a *datastore.Client to facilitate mocking in tests.
 type DatastoreClient interface {
 	Put(ctx context.Context, key *datastore.Key, value interface{}) (*datastore.Key, error)
+	PutMulti(context.Context, []*datastore.Key, interface{}) ([]*datastore.Key, error)
 	Get(ctx context.Context, key *datastore.Key, dest interface{}) error
+	GetMulti(ctx context.Context, keys []*datastore.Key, dst interface{}) error
 	Delete(ctx context.Context, keys []*datastore.Key) error
 	Count(ctx context.Context, q *datastore.Query) (int, error)
 	Run(ctx context.Context, q *datastore.Query) *datastore.Iterator
@@ -38,11 +40,25 @@ func (c *DatastoreClientImpl) Get(
 	return c.Inner.Get(ctx, key, dest)
 }
 
+// GetMulti wraps datastore.Client.GetMulti(...)
+func (c *DatastoreClientImpl) GetMulti(
+	ctx context.Context, keys []*datastore.Key, dst interface{},
+) error {
+	return c.Inner.GetMulti(ctx, keys, dst)
+}
+
 // Put wraps datastore.Client.Put(...)
 func (c *DatastoreClientImpl) Put(
 	ctx context.Context, key *datastore.Key, value interface{},
 ) (*datastore.Key, error) {
 	return c.Inner.Put(ctx, key, value)
+}
+
+// PutMulti wraps datastore.Client.PutMulti(...)
+func (c *DatastoreClientImpl) PutMulti(
+	ctx context.Context, keys []*datastore.Key, src interface{},
+) ([]*datastore.Key, error) {
+	return c.Inner.PutMulti(ctx, keys, src)
 }
 
 // Delete wraps datastore.Client.Delete(...)
