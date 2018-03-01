@@ -22,7 +22,7 @@ type Parameters struct {
 	// TODO add other params, often things like query timeouts to backend bstorage
 }
 
-// NewParameters returns a *Parameters object with default values.
+// NewDefaultParameters returns a *Parameters object with default values.
 func NewDefaultParameters() *Parameters {
 	return &Parameters{
 		Type: DefaultType,
