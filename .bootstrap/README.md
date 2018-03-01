@@ -1,6 +1,6 @@
 ## Bootstrap a new service repo
 
-Create the repo in GitHub under []elxirhealth org](https://github.com/elxirhealth) and clone locally.
+Create the repo in GitHub under [elxirhealth org](https://github.com/elxirhealth) and clone locally.
 
 Branch `develop` off `master` branch and push to GitHub.
 ```bash
@@ -55,5 +55,7 @@ git push origin feature/initial-bootstrap
 ```
 You should see the build.
 
-If using Goland as your IDE, in Preferences -> Go -> Imports, set "Sorting type" to "goimports" and check all the boxes. in Preferences -> Tools -> File Watchers, add a "goimports" file watcher (with default settings).
+If using Goland as your IDE, in Preferences -> Go -> Imports, set "Sorting type" to "goimports" and 
+check all the boxes. in Preferences -> Tools -> File Watchers, add a "goimports" file watcher (with 
+default settings).
 

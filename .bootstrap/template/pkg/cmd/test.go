@@ -1,29 +1,44 @@
 package cmd
 
 import (
-	cerrors "github.com/drausin/libri/libri/common/errors"
-	"github.com/spf13/cobra"
+	"github.com/drausin/libri/libri/common/parse"
+	"github.com/elxirhealth/service-base/.bootstrap/template/pkg/servicenameapi"
+	"github.com/elxirhealth/service-base/pkg/cmd"
+	"github.com/elxirhealth/service-base/pkg/server"
 	"github.com/spf13/viper"
 )
 
-const (
-	servicenamesFlag = "servicenames"
-)
 
-// testCmd represents the test command
-var testCmd = &cobra.Command{
-	Use:   "test",
-	Short: "test one or more servicename servers",
+func testIO() error {
+	//rng := rand.New(rand.NewSource(0))
+	//logger := lserver.NewDevLogger(lserver.GetLogLevel(viper.GetString(logLevelFlag)))
+	//timeout := time.Duration(viper.GetInt(timeoutFlag) * 1e9)
+	// TODO get other I/O params here
+
+	//clients, err := getClients()
+	_, err := getClients()
+	if err != nil {
+		return err
+	}
+
+	// TODO add I/O logic here
+
+	return nil
 }
 
-func init() {
-	rootCmd.AddCommand(testCmd)
-
-	testCmd.PersistentFlags().StringSlice(servicenamesFlag, nil,
-		"space-separated addresses of servicename(s)")
-
-	// bind viper flags
-	viper.SetEnvPrefix(envVarPrefix) // look for env vars with prefix
-	viper.AutomaticEnv()             // read in environment variables that match
-	cerrors.MaybePanic(viper.BindPFlags(testCmd.PersistentFlags()))
+func getClients() ([]servicenameapi.ServiceNameClient, error) {
+	addrs, err := parse.Addrs(viper.GetStringSlice(cmd.AddressesFlag))
+	if err != nil {
+		return nil, err
+	}
+	dialer := server.NewInsecureDialer()
+	clients := make([]servicenameapi.ServiceNameClient, len(addrs))
+	for i, addr := range addrs {
+		conn, err2 := dialer.Dial(addr.String())
+		if err != nil {
+			return nil, err2
+		}
+		clients[i] = servicenameapi.NewServiceNameClient(conn)
+	}
+	return clients, nil
 }
