@@ -16,6 +16,9 @@ build:
 docker-build-image:
 	@docker build -t gcr.io/elxir-core-infra/service-base-build:latest build
 
+enter-build-container:
+	@./scripts/run-build-container.sh
+
 fix:
 	@echo "--> Running goimports"
 	@find . -name *.go | grep -v /vendor/ | xargs goimports -l -w

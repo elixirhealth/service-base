@@ -6,30 +6,29 @@ import (
 	"os"
 	"testing"
 
-	"github.com/elxirhealth/service-base/pkg/server/storage/test"
 	_ "github.com/lib/pq"
 	_ "github.com/mattes/migrate/database/postgres"
 	"github.com/mattes/migrate/source/go-bindata"
 	"github.com/stretchr/testify/assert"
+	"github.com/elxirhealth/service-base/pkg/server/storage/test"
 )
 
 var (
-	setUpPostgresTest func(t *testing.T) (dbURL string, tearDown func() error)
+	setUpPostgresTest func(t *testing.T) (dbURL string, tearDown func())
 )
 
 func TestMain(m *testing.M) {
 	dbURL, cleanup, err := StartTestPostgres()
 	if err != nil {
 		if err2 := cleanup(); err2 != nil {
-			log.Fatal(err2.Error())
+			log.Fatal("test postgres cleanup error: " + err2.Error())
 		}
-		log.Fatal(err.Error())
+		log.Fatal("test postgres start error: " + err.Error())
 	}
-	setUpPostgresTest = func(t *testing.T) (string, func() error) {
-		return dbURL, SetUpTestPostgresDB(t, dbURL, bindata.Resource(
-			test.AssetNames(),
-			func(name string) ([]byte, error) { return test.Asset(name) },
-		))
+	as := bindata.Resource(test.AssetNames(), test.Asset)
+	setUpPostgresTest = func(t *testing.T) (string, func()) {
+		tearDown := SetUpTestPostgres(t, dbURL, as)
+		return dbURL, tearDown
 	}
 
 	code := m.Run()
@@ -40,6 +39,12 @@ func TestMain(m *testing.M) {
 	}
 
 	os.Exit(code)
+}
+
+func TestPostgresStartNoOp(t *testing.T) {
+	// check that running this again when DB is already running is fine
+	_, _, err := StartTestPostgres()
+	assert.Nil(t, err)
 }
 
 func TestPostgresInsert1(t *testing.T) {
