@@ -11,8 +11,8 @@ func TestNewServiceName_ok(t *testing.T) {
 	c, err := newServiceName(config)
 	assert.Nil(t, err)
 	assert.Equal(t, config, c.config)
-	assert.NotEmpty(t, c.storer)
 	// TODO assert.NotEmpty on other elements of server struct
+	//assert.NotEmpty(t, c.storer)
 }
 
 func TestNewServiceName_err(t *testing.T) {

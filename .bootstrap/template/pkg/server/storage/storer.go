@@ -6,22 +6,23 @@ import (
 )
 
 var (
-	// DefaultStorage is the default storage type.
+	// DefaultType is the default storage type.
 	DefaultType = bstorage.Memory
 )
 
+// Storer ... TODO add rest of description.
 type Storer interface {
 	// TODO add methods
 }
 
-// BaseParameters defines the parameters of the Storer.
+// Parameters defines the parameters of the Storer.
 type Parameters struct {
 	Type bstorage.Type
 
 	// TODO add other params, often things like query timeouts to backend bstorage
 }
 
-// NewBaseParameters returns a *BaseParameters object with default values.
+// NewParameters returns a *Parameters object with default values.
 func NewDefaultParameters() *Parameters {
 	return &Parameters{
 		Type: DefaultType,

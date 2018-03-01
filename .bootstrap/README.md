@@ -25,26 +25,14 @@ From within (basically empty) repo, bootstrap all the goods with
 ```
 where `MyService` is the CamelCase name of your service (often just a single word).
 
-Init deps
+Get the dependencies, install the git hooks, generate code for the (empty) grpc API, and auto clean 
+up code:  
 ```bash
-dep init
+make get-deps install-git-hooks proto fix
 ```
-Install git hooks
+Confirm tests pass and code lints ok 
 ```bash
-make install-git-hooks
-```
-
-Start fleshing out simple GRPC api and then run
-```bash
-make proto
-```
-to make sure things work ok. Then you can run 
-```bash
-make test
-```
-to make sure all the tests pass. Check lint via
-```bash
-make lint
+make test lint
 ```
 Once those work, you can push this bootstrapped stuff on a branch
 ```bash
