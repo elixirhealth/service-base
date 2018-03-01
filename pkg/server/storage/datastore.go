@@ -20,7 +20,9 @@ const (
 // DatastoreClient is a interface wrapper for a *datastore.Client to facilitate mocking in tests.
 type DatastoreClient interface {
 	Put(ctx context.Context, key *datastore.Key, value interface{}) (*datastore.Key, error)
+	PutMulti(context.Context, []*datastore.Key, interface{}) ([]*datastore.Key, error)
 	Get(ctx context.Context, key *datastore.Key, dest interface{}) error
+	GetMulti(ctx context.Context, keys []*datastore.Key, dst interface{}) error
 	Delete(ctx context.Context, keys []*datastore.Key) error
 	Count(ctx context.Context, q *datastore.Query) (int, error)
 	Run(ctx context.Context, q *datastore.Query) *datastore.Iterator
@@ -29,6 +31,18 @@ type DatastoreClient interface {
 // DatastoreClientImpl implements DatastoreClient.
 type DatastoreClientImpl struct {
 	Inner *datastore.Client
+}
+
+func (c *DatastoreClientImpl) PutMulti(
+	ctx context.Context, keys []*datastore.Key, src interface{},
+) ([]*datastore.Key, error) {
+	return c.Inner.PutMulti(ctx, keys, src)
+}
+
+func (c *DatastoreClientImpl) GetMulti(
+	ctx context.Context, keys []*datastore.Key, dst interface{},
+) error {
+	return c.Inner.GetMulti(ctx, keys, dst)
 }
 
 // Get wraps datastore.Client.Get(...)
