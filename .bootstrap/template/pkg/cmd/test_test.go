@@ -9,6 +9,7 @@ import (
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"
+	"github.com/elxirhealth/service-base/pkg/cmd"
 )
 
 func TestTestIO(t *testing.T) {
@@ -29,7 +30,7 @@ func TestTestIO(t *testing.T) {
 	}(wg1)
 
 	x := <-up
-	viper.Set(servicenamesFlag, fmt.Sprintf("localhost:%d", config.ServerPort))
+	viper.Set(cmd.AddressesFlag, fmt.Sprintf("localhost:%d", config.ServerPort))
 	// TODO set other I/O test configs
 
 	err := testIO()

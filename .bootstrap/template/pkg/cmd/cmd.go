@@ -19,10 +19,12 @@ const (
 	serviceNameCamel     = "ServiceName"
 	envVarPrefix         = "SERVICENAME"
 	logLevelFlag         = "logLevel"
-	storageMemoryFlag    = "storageMemory"
-	storageDataStoreFlag = "storageDataStore"
-	storagePostgresFlag  = "storagePostgres"
-	dbURLFlag            = "dbURL"
+
+	// TODO uncomment or delete
+	//storageMemoryFlag    = "storageMemory"
+	//storageDataStoreFlag = "storageDataStore"
+	//storagePostgresFlag  = "storagePostgres"
+	//dbURLFlag            = "dbURL"
 )
 
 var (
@@ -71,9 +73,7 @@ func start() error {
 	if err != nil {
 		return err
 	}
-	if err = server.Start(config, make(chan *server.ServiceName, 1)); err != nil {
-		return err
-	}
+	return server.Start(config, make(chan *server.ServiceName, 1))
 }
 
 func getServiceNameConfig() (*server.Config, error) {
