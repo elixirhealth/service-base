@@ -26,7 +26,7 @@ func newServiceName(config *Config) (*ServiceName, error) {
 	return &ServiceName{
 		BaseServer: baseServer,
 		config:     config,
-		storer: storer,
+		storer:     storer,
 		// TODO maybe add other things
 	}, nil
 }

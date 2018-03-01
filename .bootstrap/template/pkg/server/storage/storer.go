@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"go.uber.org/zap/zapcore"
 	bstorage "github.com/elxirhealth/service-base/pkg/server/storage"
+	"go.uber.org/zap/zapcore"
 )
 
 var (

@@ -3,16 +3,17 @@ package cmd
 import (
 	"testing"
 
+	"strings"
+
+	"github.com/elxirhealth/service-base/version"
+	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
-	"github.com/spf13/cobra"
-	"github.com/elxirhealth/service-base/version"
-	"github.com/spf13/pflag"
-	"strings"
 )
 
 const (
-	serviceName = "testservice"
+	serviceName      = "testservice"
 	serviceNameCamel = "TestService"
 )
 

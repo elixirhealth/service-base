@@ -17,25 +17,25 @@ import (
 
 const (
 	// AddressesFlag gives the flag for the server addresses.
-	AddressesFlag    = "addresses"
+	AddressesFlag = "addresses"
 
 	// LogLevelFlag gives the flag for the server log level.
-	LogLevelFlag     = "logLevel"
+	LogLevelFlag = "logLevel"
 
 	// TimeoutFlag gives the flag for the timeout of requests to the server.
-	TimeoutFlag      = "timeout"
+	TimeoutFlag = "timeout"
 
 	// ServerPortFlag gives the flag for the main port for the server to listen to requests on.
-	ServerPortFlag   = "serverPort"
+	ServerPortFlag = "serverPort"
 
 	// MetricsPortFlag gives the flag for the port to serve metrics on.
-	MetricsPortFlag  = "metricsPort"
+	MetricsPortFlag = "metricsPort"
 
 	// ProfilerPortFlag gives the flag for the port to serve profiling info on.
 	ProfilerPortFlag = "profilerPort"
 
 	// ProfileFlag gives the flag for whether the profiler is enabled or not.
-	ProfileFlag      = "profile"
+	ProfileFlag = "profile"
 )
 
 // Start returns the command to start the server via the passed in start func.
