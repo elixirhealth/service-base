@@ -9,6 +9,10 @@ import (
 	"log"
 )
 
+const (
+	//timeoutFlag = "timeout"
+)
+
 func testIO() error {
 	//rng := rand.New(rand.NewSource(0))
 	//logger := lserver.NewDevLogger(lserver.GetLogLevel(viper.GetString(logLevelFlag)))

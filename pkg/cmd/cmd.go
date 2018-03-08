@@ -67,7 +67,7 @@ func Start(
 		"whether to enable profiler")
 	defineFlags(cmd.Flags())
 
-	err := viper.BindPFlags(cmd.PersistentFlags())
+	err := viper.BindPFlags(cmd.Flags())
 	cerrors.MaybePanic(err)
 	parent.AddCommand(cmd)
 	return cmd
@@ -129,7 +129,7 @@ func TestIO(
 		fmt.Sprintf("timeout (secs) of %s requests", serviceName))
 	defineFlags(cmd.Flags())
 
-	err := viper.BindPFlags(cmd.PersistentFlags())
+	err := viper.BindPFlags(cmd.Flags())
 	cerrors.MaybePanic(err)
 	parent.AddCommand(cmd)
 	return cmd

@@ -13,7 +13,7 @@ import (
 )
 
 func TestTestIO(t *testing.T) {
-	// start in-memory servicename w/o librarians, so all libri puts will just be queued
+	// start in-memory servicename
 	config := server.NewDefaultConfig()
 	config.LogLevel = zapcore.DebugLevel
 	config.ServerPort = 10200
