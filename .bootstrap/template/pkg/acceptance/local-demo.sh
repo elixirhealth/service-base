@@ -5,7 +5,7 @@ set -eou pipefail
 
 docker_cleanup() {
     echo "cleaning up existing network and containers..."
-    CONTAINERS='libri|servicename'
+    CONTAINERS='servicename'
     docker ps | grep -E ${CONTAINERS} | awk '{print $1}' | xargs -I {} docker stop {} || true
     docker ps -a | grep -E ${CONTAINERS} | awk '{print $1}' | xargs -I {} docker rm {} || true
     docker network list | grep ${CONTAINERS} | awk '{print $2}' | xargs -I {} docker network rm {} || true
@@ -29,7 +29,7 @@ echo
 echo "creating servicename docker network..."
 docker network create servicename
 
-# TODO start and healthcheck dependency services
+# TODO start and healthcheck dependency services if necessary
 
 echo
 echo "starting servicename..."
@@ -39,7 +39,7 @@ docker run --name "${name}" --net=servicename -d -p ${port}:${port} ${SERVICENAM
     start \
     --logLevel "${SERVICENAME_LOG_LEVEL}" \
     --serverPort ${port}
-    # TODO add other relevant args
+    # TODO add other relevant args if necessary
 servicename_addrs="${name}:${port}"
 servicename_containers="${name}"
 
@@ -51,7 +51,10 @@ docker run --rm --net=servicename ${SERVICENAME_IMAGE} test health \
 
 echo
 echo "testing servicename ..."
-# TODO
+docker run --rm --net=servicename ${SERVICENAME_IMAGE} test io \
+    --servicenames "${servicename_addrs}" \
+    --logLevel "${SERVICENAME_LOG_LEVEL}"
+    # TODO add other relevant args if necessary
 
 echo
 echo "cleaning up..."
