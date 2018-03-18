@@ -54,9 +54,13 @@ type BaseServer struct {
 
 // NewBaseServer creates a new BaseServer from the config.
 func NewBaseServer(config *BaseConfig) *BaseServer {
-	metricsSM := http.NewServeMux()
-	metricsSM.Handle("/metrics", promhttp.Handler())
-	metrics := &http.Server{Addr: fmt.Sprintf(":%d", config.MetricsPort), Handler: metricsSM}
+	var metrics *http.Server
+	if config.MetricsPort != 0 {
+		metricsSM := http.NewServeMux()
+		metricsSM.Handle("/metrics", promhttp.Handler())
+		metricsAddr := fmt.Sprintf(":%d", config.MetricsPort)
+		metrics = &http.Server{Addr: metricsAddr, Handler: metricsSM}
+	}
 
 	return &BaseServer{
 		config:  config,
@@ -124,12 +128,15 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 }
 
 func (b *BaseServer) startAuxRoutines() {
-	go func() {
-		if err := b.metrics.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			b.Logger.Error("error serving Prometheus metrics", zap.Error(err))
-			b.StopServer()
-		}
-	}()
+	if b.metrics != nil {
+		go func() {
+			if err := b.metrics.ListenAndServe();
+			err != nil && err != http.ErrServerClosed {
+				b.Logger.Error("error serving Prometheus metrics", zap.Error(err))
+				b.StopServer()
+			}
+		}()
+	}
 
 	if b.config.Profile {
 		go func() {
@@ -157,7 +164,6 @@ func (b *BaseServer) WaitUntilStarted() {
 
 // StopServer handles cleanup involved in closing down the server.
 func (b *BaseServer) StopServer() {
-	b.Logger.Info("gracefully stopping server")
 	// send Stop signal to listener
 	select {
 	case <-b.Stop: // already closed
@@ -165,14 +171,16 @@ func (b *BaseServer) StopServer() {
 		close(b.Stop)
 	}
 
-	// end metrics server
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
-	if err := b.metrics.Shutdown(ctx); err != nil {
-		if err == context.DeadlineExceeded {
-			errors.MaybePanic(b.metrics.Close())
+	if b.metrics != nil {
+		// end metrics server
+		ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
+		if err := b.metrics.Shutdown(ctx); err != nil {
+			if err == context.DeadlineExceeded {
+				errors.MaybePanic(b.metrics.Close())
+			}
 		}
+		cancel()
 	}
-	cancel()
 
 	// wait for server to Stop
 	<-b.stopped
