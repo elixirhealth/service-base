@@ -92,9 +92,6 @@ func (c *BaseConfig) WithDefaultServerPort() *BaseConfig {
 
 // WithMetricsPort sets the metrics port to the given value or the default if it is zero.
 func (c *BaseConfig) WithMetricsPort(p uint) *BaseConfig {
-	if p == 0 {
-		return c.WithDefaultServerPort()
-	}
 	c.MetricsPort = p
 	return c
 }

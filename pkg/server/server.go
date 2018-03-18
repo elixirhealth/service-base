@@ -81,10 +81,12 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 		grpc.MaxConcurrentStreams(b.config.MaxConcurrentStreams),
 	)
 	registerServer(s)
-	healthpb.RegisterHealthServer(s, b.health)
-	grpc_prometheus.Register(s)
-	grpc_prometheus.EnableHandlingTimeHistogram()
 	reflection.Register(s)
+	healthpb.RegisterHealthServer(s, b.health)
+	if b.metrics != nil {
+		grpc_prometheus.Register(s)
+		grpc_prometheus.EnableHandlingTimeHistogram()
+	}
 
 	// handle Stop signal
 	go func() {
