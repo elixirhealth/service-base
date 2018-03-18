@@ -46,13 +46,13 @@ servicename_containers="${name}"
 echo
 echo "testing servicename health..."
 docker run --rm --net=servicename ${SERVICENAME_IMAGE} test health \
-    --servicenames "${servicename_addrs}" \
+    --addresses "${servicename_addrs}" \
     --logLevel "${SERVICENAME_LOG_LEVEL}"
 
 echo
 echo "testing servicename ..."
 docker run --rm --net=servicename ${SERVICENAME_IMAGE} test io \
-    --servicenames "${servicename_addrs}" \
+    --addresses "${servicename_addrs}" \
     --logLevel "${SERVICENAME_LOG_LEVEL}"
     # TODO add other relevant args if necessary
 

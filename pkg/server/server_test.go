@@ -86,6 +86,25 @@ func TestBaseServer_startAuxRoutines(t *testing.T) {
 	<-b.Stop
 }
 
+func TestBaseServer_startAuxRoutines_noMetrics(t *testing.T) {
+	c := &BaseConfig{
+		ServerPort:           10100,
+		MetricsPort:          0,
+		ProfilerPort:         10164,
+		MaxConcurrentStreams: DefaultMaxConcurrentStreams,
+		LogLevel:             zap.InfoLevel,
+		Profile:              true,
+	}
+	b := NewBaseServer(c)
+	b.startAuxRoutines()
+
+	// confirm no metrics
+	metricsAddr := fmt.Sprintf("http://localhost:%d/metrics", c.MetricsPort)
+	resp, err := http.Get(metricsAddr)
+	assert.NotNil(t, err)
+	assert.Nil(t, resp)
+}
+
 func TestBaseServer_State(t *testing.T) {
 	s := NewBaseServer(&BaseConfig{})
 	assert.Equal(t, Starting, s.State())
