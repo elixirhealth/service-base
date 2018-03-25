@@ -1,6 +1,6 @@
 ## Bootstrap a new service repo
 
-Create the repo in GitHub under [elxirhealth org](https://github.com/elxirhealth) and clone locally.
+Create the repo in GitHub under [elixirhealth org](https://github.com/elixirhealth) and clone locally.
 
 Branch `develop` off `master` branch and push to GitHub.
 ```bash
@@ -11,7 +11,7 @@ In repo settings in GitHub,
 - in "Branches", turn on branch protection for both `master` and `develop` and make `develop` default branch
 - in "Options", uncheck options for allowing merge commits and rebase merging (leaving just squash merging)
 
-Add new repo to CircleCI [elxirhealth org](https://circleci.com/gh/elxirhealth). Initial build will fail
+Add new repo to CircleCI [elixirhealth org](https://circleci.com/gh/elixirhealth). Initial build will fail
 because there's no config. That's ok. 
 
 In the settings for the new CircleCI project you just created, import the environment variable `GCR_SVC_JSON`

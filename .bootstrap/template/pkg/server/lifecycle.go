@@ -1,7 +1,7 @@
 package server
 
 import (
-	api "github.com/elxirhealth/servicename/pkg/servicenameapi"
+	api "github.com/elixirhealth/servicename/pkg/servicenameapi"
 	"google.golang.org/grpc"
 )
 

@@ -30,7 +30,8 @@ RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && \
 
 ENV GOPATH "/go"
 ENV BUILD_USER "builder"
-RUN useradd -ms /bin/bash builder
+RUN useradd -ms /bin/bash ${BUILD_USER} && \
+    chown -R ${BUILD_USER} /usr/local
 
 # install Postgres
 ENV POSTGRES_VERSION 10

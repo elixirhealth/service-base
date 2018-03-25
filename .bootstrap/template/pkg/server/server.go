@@ -1,8 +1,8 @@
 package server
 
 import (
-	"github.com/elxirhealth/service-base/pkg/server"
-	"github.com/elxirhealth/servicename/pkg/server/storage"
+	"github.com/elixirhealth/service-base/pkg/server"
+	"github.com/elixirhealth/servicename/pkg/server/storage"
 )
 
 // ServiceName implements the ServiceNameServer interface.

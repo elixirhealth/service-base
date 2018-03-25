@@ -1,6 +1,6 @@
 package main
 
-import "github.com/elxirhealth/servicename/pkg/cmd"
+import "github.com/elixirhealth/servicename/pkg/cmd"
 
 func main() {
 	cmd.Execute()

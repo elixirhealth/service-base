@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/elxirhealth/service-base/pkg/server/storage/test"
+	"github.com/elixirhealth/service-base/pkg/server/storage/test"
 	_ "github.com/lib/pq"
 	_ "github.com/mattes/migrate/database/postgres"
 	"github.com/mattes/migrate/source/go-bindata"
