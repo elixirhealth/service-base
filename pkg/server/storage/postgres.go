@@ -23,7 +23,7 @@ const (
 	migrationPrefix = "[migration] "
 
 	// these vars assume the particular installation settings and paths found in the Docker
-	// gcr.io/elxir-core-infra/service-base-build image
+	// gcr.io/elixir-core-prod/service-base-build image
 	postgresTestServerDir = "/var/lib/postgresql/10/tests"
 	postgresTestServerLog = "/var/log/postgresql/tests.log"
 	postgresDBName        = "postgres"
@@ -144,7 +144,7 @@ func SetUpTestPostgres(t *testing.T, dbURL string, as *bindata.AssetSource) func
 // StartTestPostgres starts a Postgres server for tests to use. It assumes that pg_ctl is available
 // in the PATH and that the postgresTestServerDir and postgresTestServerLog are valid paths. This
 // generally will only be the case when running inside of a
-// gcr.io/elxir-core-infra/service-base-build Docker container.
+// gcr.io/elixir-core-prod/service-base-build Docker container.
 // nolint: gas
 func StartTestPostgres() (dbURL string, cleanup func() error, err error) {
 	dbURL = fmt.Sprintf("postgres://localhost:5432/%s?sslmode=disable", postgresDBName)

@@ -19,7 +19,7 @@ SERVICENAME_TIMEOUT="${SERVICENAME_TIMEOUT:-5}"  # 10, or 20 for really sketchy 
 LOCAL_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # container command constants
-SERVICENAME_IMAGE="gcr.io/elxir-core-infra/servicename:snapshot" # develop
+SERVICENAME_IMAGE="gcr.io/elixir-core-prod/servicename:snapshot" # develop
 
 echo
 echo "cleaning up from previous runs..."
