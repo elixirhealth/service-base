@@ -14,7 +14,7 @@ build:
 	@go build $(PKGS)
 
 docker-build-image:
-	@docker build -t gcr.io/elxir-core-infra/service-base-build:latest build
+	@docker build -t gcr.io/elixir-core-prod/service-base-build:latest build
 
 enter-build-container:
 	@./scripts/run-build-container.sh

@@ -8,4 +8,4 @@ docker run --rm -it \
 	-v "${GOPATH}/src":/go/src \
 	-v ~/.bashrc:"/home/${BUILD_USER}/.bashrc" \
 	-v ~/.gitconfig:"/home/${BUILD_USER}/.gitconfig" \
-	gcr.io/elxir-core-infra/service-base-build:latest
+	gcr.io/elixir-core-prod/service-base-build:latest
