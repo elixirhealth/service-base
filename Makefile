@@ -1,7 +1,7 @@
 SHELL=/bin/bash -eou pipefail
 GOTOOLS= github.com/alecthomas/gometalinter github.com/wadey/gocovmerge
 PKGS=$(shell go list ./... | grep -v bootstrap)
-PKG_SUBDIRS=$(shell go list ./... | grep -v /vendor/ | sed -r 's|github.com/elxirhealth/service-base/||g' | sort)
+PKG_SUBDIRS=$(shell go list ./... | grep -v /vendor/ | sed -r 's|github.com/elixirhealth/service-base/||g' | sort)
 GIT_STATUS_SUBDIRS=$(shell git status --porcelain | grep -e '\.go$$' | sed -r 's|^...(.+)/[^/]+\.go$$|\1|' | sort | uniq)
 GIT_DIFF_SUBDIRS=$(shell git diff develop..HEAD --name-only | grep -e '\.go$$' | sed -r 's|^(.+)/[^/]+\.go$$|\1|' | sort | uniq)
 GIT_STATUS_PKG_SUBDIRS=$(shell echo $(PKG_SUBDIRS) $(GIT_STATUS_SUBDIRS) | tr " " "\n" | sort | uniq -d)

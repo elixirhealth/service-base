@@ -1,7 +1,7 @@
 package storage
 
 import (
-	bstorage "github.com/elxirhealth/service-base/pkg/server/storage"
+	bstorage "github.com/elixirhealth/service-base/pkg/server/storage"
 	"go.uber.org/zap/zapcore"
 )
 

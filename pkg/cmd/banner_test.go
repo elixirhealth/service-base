@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/elxirhealth/service-base/version"
+	"github.com/elixirhealth/service-base/version"
 )
 
 func TestWriteBanner(t *testing.T) {

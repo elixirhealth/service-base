@@ -3,7 +3,7 @@ package cmd
 import (
 	"testing"
 
-	"github.com/elxirhealth/service-base/pkg/cmd"
+	"github.com/elixirhealth/service-base/pkg/cmd"
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap/zapcore"

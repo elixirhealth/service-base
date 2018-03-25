@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"github.com/drausin/libri/libri/common/parse"
-	"github.com/elxirhealth/service-base/pkg/cmd"
-	"github.com/elxirhealth/service-base/pkg/server"
-	"github.com/elxirhealth/servicename/pkg/servicenameapi"
+	"github.com/elixirhealth/service-base/pkg/cmd"
+	"github.com/elixirhealth/service-base/pkg/server"
+	"github.com/elixirhealth/servicename/pkg/servicenameapi"
 	"github.com/spf13/viper"
 	"log"
 )

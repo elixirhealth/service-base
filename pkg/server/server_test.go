@@ -10,7 +10,7 @@ import (
 	"net"
 
 	"github.com/drausin/libri/libri/common/logging"
-	"github.com/elxirhealth/service-base/pkg/server/test"
+	"github.com/elixirhealth/service-base/pkg/server/test"
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/zap"
 	"golang.org/x/net/context"

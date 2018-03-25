@@ -5,7 +5,7 @@ import (
 
 	"strings"
 
-	"github.com/elxirhealth/service-base/version"
+	"github.com/elixirhealth/service-base/version"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
