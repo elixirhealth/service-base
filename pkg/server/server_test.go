@@ -70,7 +70,7 @@ func TestBaseServer_Serve_forcefulStop(t *testing.T) {
 	cl := test.NewPingPongClient(cc)
 	go func() {
 		_, err := cl.Ping(context.Background(), &test.PingRequest{})
-		assert.Nil(t, err)
+		assert.NotNil(t, err)
 	}()
 
 	time.Sleep(100 * time.Millisecond)
