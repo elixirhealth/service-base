@@ -20,7 +20,7 @@ import (
 func TestBaseServer_Serve_ok(t *testing.T) {
 	c := NewDefaultBaseConfig()
 	c.Profile = false
-	srv1 := &pingPong{NewBaseServer(c)}
+	srv1 := &pingPong{BaseServer: NewBaseServer(c)}
 	registerFunc := func(s *grpc.Server) { test.RegisterPingPongServer(s, srv1) }
 
 	up := make(chan *pingPong, 1)
@@ -45,10 +45,42 @@ func TestBaseServer_Serve_ok(t *testing.T) {
 	srv1.StopServer()
 }
 
+func TestBaseServer_Serve_forcefulStop(t *testing.T) {
+	c := NewDefaultBaseConfig()
+	c.Profile = false
+	srv1 := &pingPong{
+		BaseServer: NewBaseServer(c),
+		hang:       10 * time.Second, // simulate hanging request
+	}
+	registerFunc := func(s *grpc.Server) { test.RegisterPingPongServer(s, srv1) }
+
+	up := make(chan *pingPong, 1)
+	go func() {
+		err := srv1.Serve(registerFunc, func() { up <- srv1 })
+		assert.Nil(t, err)
+	}()
+
+	srv2 := <-up
+	assert.Equal(t, srv1, srv2)
+
+	// make request from client that will hang
+	addrStr := fmt.Sprintf("localhost:%d", c.ServerPort)
+	cc, err := grpc.Dial(addrStr, grpc.WithInsecure())
+	assert.Nil(t, err)
+	cl := test.NewPingPongClient(cc)
+	go func() {
+		_, err := cl.Ping(context.Background(), &test.PingRequest{})
+		assert.NotNil(t, err)
+	}()
+
+	time.Sleep(100 * time.Millisecond)
+	srv1.StopServer()
+}
+
 func TestBaseServer_Serve_err(t *testing.T) {
 	c := NewDefaultBaseConfig()
 	c.ServerPort = 10000000 // bad port
-	srv := &pingPong{NewBaseServer(c)}
+	srv := &pingPong{BaseServer: NewBaseServer(c)}
 	registerFunc := func(s *grpc.Server) { test.RegisterPingPongServer(s, srv) }
 
 	up := make(chan *pingPong, 1)
@@ -122,8 +154,14 @@ func TestBaseServer_State(t *testing.T) {
 
 type pingPong struct {
 	*BaseServer
+	hang time.Duration
 }
 
-func (*pingPong) Ping(context.Context, *test.PingRequest) (*test.PingResponse, error) {
+func (p *pingPong) Ping(context.Context, *test.PingRequest) (*test.PingResponse, error) {
+	p.Logger.Info("received Ping request")
+	if p.hang != 0 {
+		p.Logger.Info("hanging", zap.Duration("time", p.hang))
+		time.Sleep(p.hang)
+	}
 	return &test.PingResponse{Pong: true}, nil
 }
