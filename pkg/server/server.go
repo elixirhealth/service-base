@@ -23,6 +23,10 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
+const (
+	gracefulStopTimeout = 3 * time.Second
+)
+
 // State defines the state of the server. The state follows a finite state machine of
 // Starting -> Started -> Stopping -> Stopped
 type State uint
@@ -91,11 +95,22 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	// handle Stop signal
 	go func() {
 		<-b.Stop
-		b.Logger.Info("gracefully stopping server",
-			zap.Uint(logServerPort, b.config.ServerPort),
-		)
-		s.GracefulStop()
-		close(b.stopped)
+		go func() {
+			time.Sleep(gracefulStopTimeout)
+			s.Stop()
+			b.Logger.Info("forcefully stopped server",
+				zap.Uint(logServerPort, b.config.ServerPort),
+			)
+			maybeClose(b.stopped)
+		}()
+		go func() {
+			b.Logger.Info("gracefully stopping server",
+				zap.Uint(logServerPort, b.config.ServerPort),
+			)
+			s.GracefulStop()
+			maybeClose(b.stopped)
+		}()
+		<-b.stopped
 	}()
 
 	b.startAuxRoutines()
@@ -129,11 +144,18 @@ func (b *BaseServer) Serve(registerServer func(s *grpc.Server), onServing func()
 	return nil
 }
 
+func maybeClose(ch chan struct{}) {
+	select {
+	case <-ch: // already closed
+	default:
+		close(ch)
+	}
+}
+
 func (b *BaseServer) startAuxRoutines() {
 	if b.metrics != nil {
 		go func() {
-			if err := b.metrics.ListenAndServe();
-			err != nil && err != http.ErrServerClosed {
+			if err := b.metrics.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 				b.Logger.Error("error serving Prometheus metrics", zap.Error(err))
 				b.StopServer()
 			}
