@@ -30,6 +30,24 @@ const (
 	postgresDBName        = "postgres"
 )
 
+// ColDest is a mapping from a column name to a sql.Scan destination type.
+type ColDest struct {
+	col  string
+	dest interface{}
+}
+
+// SplitColDests returns a list of column names and their corresponding destination types plus a
+// given number of extra destination capacity.
+func SplitColDests(nExtraDest int, cds []*ColDest) ([]string, []interface{}) {
+	dests := make([]interface{}, len(cds), len(cds)+nExtraDest)
+	cols := make([]string, len(cds))
+	for i, colDest := range cds {
+		cols[i] = colDest.col
+		dests[i] = colDest.dest
+	}
+	return cols, dests
+}
+
 // QueryRows is a container for the result of a Select query.
 type QueryRows interface {
 	Scan(dest ...interface{}) error
