@@ -63,6 +63,7 @@ type Querier interface {
 	SelectQueryRowContext(ctx context.Context, b sq.SelectBuilder) sq.RowScanner
 	InsertExecContext(ctx context.Context, b sq.InsertBuilder) (sql.Result, error)
 	UpdateExecContext(ctx context.Context, b sq.UpdateBuilder) (sql.Result, error)
+	DeleteExecContext(ctx context.Context, b sq.DeleteBuilder) (sql.Result, error)
 }
 
 type querierImpl struct{}
@@ -96,10 +97,15 @@ func (q *querierImpl) UpdateExecContext(
 	return b.ExecContext(ctx)
 }
 
+func (q *querierImpl) DeleteExecContext(
+	ctx context.Context, b sq.DeleteBuilder,
+) (sql.Result, error) {
+	return b.ExecContext(ctx)
+}
+
 // Migrator handles Postgres DB migrations. It is a thin wrapper around *Migrate in mattes/migrate
 // package.
 type Migrator interface {
-
 	// Up migrates the DB up to the latest state.
 	Up() error
 
