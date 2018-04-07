@@ -1,15 +1,16 @@
 package storage
 
 import (
+	"context"
 	"database/sql"
+	"fmt"
+	"log"
 	"os/exec"
+	"strings"
 	"testing"
 	"time"
 
-	"fmt"
-	"log"
-	"strings"
-
+	sq "github.com/Masterminds/squirrel"
 	"github.com/cenkalti/backoff"
 	"github.com/drausin/libri/libri/common/errors"
 	_ "github.com/lib/pq" // loads "postgres" driver for database/sql
@@ -28,6 +29,54 @@ const (
 	postgresTestServerLog = "/var/log/postgresql/tests.log"
 	postgresDBName        = "postgres"
 )
+
+// QueryRows is a container for the result of a Select query.
+type QueryRows interface {
+	Scan(dest ...interface{}) error
+	Next() bool
+	Close() error
+	Err() error
+}
+
+// Querier is an interface wrapper around Squirrel query builders and their results for improved
+// mocking.
+type Querier interface {
+	SelectQueryContext(ctx context.Context, b sq.SelectBuilder) (QueryRows, error)
+	SelectQueryRowContext(ctx context.Context, b sq.SelectBuilder) sq.RowScanner
+	InsertExecContext(ctx context.Context, b sq.InsertBuilder) (sql.Result, error)
+	UpdateExecContext(ctx context.Context, b sq.UpdateBuilder) (sql.Result, error)
+}
+
+type querierImpl struct{}
+
+// NewQuerier returns a new Querier.
+func NewQuerier() Querier {
+	return &querierImpl{}
+}
+
+func (q *querierImpl) SelectQueryContext(
+	ctx context.Context, b sq.SelectBuilder,
+) (QueryRows, error) {
+	return b.QueryContext(ctx)
+}
+
+func (q *querierImpl) SelectQueryRowContext(
+	ctx context.Context, b sq.SelectBuilder,
+) sq.RowScanner {
+	return b.QueryRowContext(ctx)
+}
+
+func (q *querierImpl) InsertExecContext(
+	ctx context.Context, b sq.InsertBuilder,
+) (sql.Result, error) {
+	return b.ExecContext(ctx)
+}
+
+func (q *querierImpl) UpdateExecContext(
+	ctx context.Context, b sq.UpdateBuilder,
+) (sql.Result, error) {
+	return b.ExecContext(ctx)
+}
 
 // Migrator handles Postgres DB migrations. It is a thin wrapper around *Migrate in mattes/migrate
 // package.
