@@ -32,8 +32,8 @@ const (
 
 // ColDest is a mapping from a column name to a sql.Scan destination type.
 type ColDest struct {
-	col  string
-	dest interface{}
+	Col  string
+	Dest interface{}
 }
 
 // SplitColDests returns a list of column names and their corresponding destination types plus a
@@ -42,8 +42,8 @@ func SplitColDests(nExtraDest int, cds []*ColDest) ([]string, []interface{}) {
 	dests := make([]interface{}, len(cds), len(cds)+nExtraDest)
 	cols := make([]string, len(cds))
 	for i, colDest := range cds {
-		cols[i] = colDest.col
-		dests[i] = colDest.dest
+		cols[i] = colDest.Col
+		dests[i] = colDest.Dest
 	}
 	return cols, dests
 }
